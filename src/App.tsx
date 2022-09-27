@@ -22,7 +22,8 @@ const sketch: Sketch = (p5) => {
       p5.line(noteEdgeX, 0, noteEdgeX, p5.height)
 
       p5.textAlign("center")
-      p5.text(note, noteEdgeX + noteWidth / 2, p5.height / 2)
+      const noteName = Tone.Frequency(note, "midi").toNote()
+      p5.text(noteName, noteEdgeX + noteWidth / 2, p5.height / 2)
     })
 
     
