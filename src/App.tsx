@@ -1,8 +1,9 @@
 import { ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import * as Tone from "tone";
+import _ from "lodash"
 
-const minNote = 40;
-const maxNote = 80;
+const minNote = 50;
+const maxNote = 70;
 
 const oscillator = new Tone.Oscillator().toDestination()
 
@@ -16,11 +17,17 @@ const sketch: Sketch = (p5) => {
 
   p5.draw = () => {
     p5.background(220);
-    note = p5.map(p5.mouseX, 0, p5.width, minNote, maxNote);
-    note = p5.round(note)
+
+    _.range(minNote + 1, maxNote + 1).forEach((note) => {
+      const noteEdgeX = p5.map(note, minNote, maxNote + 1, 0, p5.width)
+      p5.line(noteEdgeX, 0, noteEdgeX, p5.height)
+    })
+
+    note = p5.map(p5.mouseX, 0, p5.width, minNote, maxNote + 1, true);
+    note = p5.floor(note)
     p5.text("Current note is " + note, 20, 20);
     const newFrequency = Tone.Frequency(note, "midi").toFrequency()
-    oscillator.frequency.rampTo(newFrequency, p5.deltaTime / 1000)
+    oscillator.frequency.rampTo(newFrequency, 0.05)
   };
 
   p5.windowResized = () => {
