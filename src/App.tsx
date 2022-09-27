@@ -37,8 +37,8 @@ const sketch: Sketch = (p5) => {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
   };
 
-  p5.mousePressed = () => {
-    Tone.start()
+  p5.mousePressed = async () => {
+    await Tone.start()
     console.log("Starting oscillator")
     if (oscillator.state === "stopped") {
       oscillator.start()
