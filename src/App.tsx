@@ -18,14 +18,17 @@ const sketch: Sketch = (p5) => {
   p5.draw = () => {
     p5.background(220);
 
-    _.range(minNote + 1, maxNote + 1).forEach((note) => {
+    const noteWidth = p5.width / (maxNote - minNote)
+    _.range(minNote, maxNote + 1).forEach((note) => {
       const noteEdgeX = p5.map(note, minNote, maxNote + 1, 0, p5.width)
       p5.line(noteEdgeX, 0, noteEdgeX, p5.height)
+
+      p5.textAlign("center")
+      p5.text(note, noteEdgeX + noteWidth / 2, p5.height / 2)
     })
 
     note = p5.map(p5.mouseX, 0, p5.width, minNote, maxNote + 1, true);
     note = p5.floor(note)
-    p5.text("Current note is " + note, 20, 20);
     const newFrequency = Tone.Frequency(note, "midi").toFrequency()
     oscillator.frequency.rampTo(newFrequency, 0.05)
   };
