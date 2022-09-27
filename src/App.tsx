@@ -8,8 +8,6 @@ const maxNote = 70;
 const oscillator = new Tone.Oscillator().toDestination()
 
 const sketch: Sketch = (p5) => {
-  let note = 60;
-
   p5.setup = () => {
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.style("display", "block");
@@ -27,10 +25,7 @@ const sketch: Sketch = (p5) => {
       p5.text(note, noteEdgeX + noteWidth / 2, p5.height / 2)
     })
 
-    note = p5.map(p5.mouseX, 0, p5.width, minNote, maxNote + 1, true);
-    note = p5.floor(note)
-    const newFrequency = Tone.Frequency(note, "midi").toFrequency()
-    oscillator.frequency.rampTo(newFrequency, 0.05)
+    
   };
 
   p5.windowResized = () => {
@@ -41,14 +36,34 @@ const sketch: Sketch = (p5) => {
     await Tone.start()
     // TODO: Figure out why this fires twice
     console.log("Starting oscillator")
+
+    const note = getNoteAtMousePosition()
+    const newFrequency = noteToFrequency(note)
+    oscillator.frequency.value = newFrequency
+
     if (oscillator.state === "stopped") {
       oscillator.start()
     }
     return false
   };
 
+  p5.mouseDragged = () => {
+    const note = getNoteAtMousePosition()
+    const newFrequency = noteToFrequency(note)
+    oscillator.frequency.rampTo(newFrequency, 0.05)
+  }
+
   p5.mouseReleased = () => {
     oscillator.stop()
+  }
+
+  const getNoteAtMousePosition = () => {
+    const newNote = p5.map(p5.mouseX, 0, p5.width, minNote, maxNote + 1, true);
+    return p5.floor(newNote)
+  }
+
+  const noteToFrequency = (note: number) => {
+    return Tone.Frequency(note, "midi").toFrequency()
   }
 };
 
