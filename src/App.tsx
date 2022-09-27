@@ -39,6 +39,7 @@ const sketch: Sketch = (p5) => {
 
   p5.mousePressed = async () => {
     await Tone.start()
+    // TODO: Figure out why this fires twice
     console.log("Starting oscillator")
     if (oscillator.state === "stopped") {
       oscillator.start()
