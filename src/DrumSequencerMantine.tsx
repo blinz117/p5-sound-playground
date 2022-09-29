@@ -88,9 +88,10 @@ export const DrumSequencerMantine = () => {
 
   useEffect(() => {
     part.current?.stop();
+    part.current?.dispose();
     const newPart = getPartForTracks(drumTracks);
     part.current = newPart;
-    newPart.start();
+    newPart.start("0:0");
   }, [drumTracks]);
 
   return (
