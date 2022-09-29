@@ -1,10 +1,11 @@
-import { ActionIcon, Box, Button, SimpleGrid, Stack } from "@mantine/core";
+import { ActionIcon, Button, Stack } from "@mantine/core";
 import _ from "lodash";
 import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
-import { Tuple } from "./Tuple";
+import { Tuple } from "../Tuple";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { Time } from "tone/build/esm/core/type/Units";
+import { DrumPads } from "./DrumPads";
 
 type DrumPlayFunction = (time?: Time) => void;
 
@@ -42,9 +43,9 @@ const instruments: DrumSound[] = [
   { name: "hi hat (closed)", play: playHiHatClosed },
 ];
 
-const numberOfBeats = 8;
+export const numberOfBeats = 8;
 
-interface DrumTrack {
+export interface DrumTrack {
   sound: DrumSound;
   beatsToPlay: number[];
 }
@@ -134,42 +135,5 @@ export const DrumSequencerMantine = () => {
         {isPlaying ? <FaStop /> : <FaPlay />}
       </ActionIcon>
     </Stack>
-  );
-};
-
-interface DrumPadsProps {
-  tracks: DrumTrack[];
-  onBeatToggled: (track: DrumTrack, beatIndex: number) => void;
-}
-
-const DrumPads = (props: DrumPadsProps) => {
-  return (
-    <SimpleGrid
-      cols={numberOfBeats}
-      p={"sm"}
-      sx={{
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      {props.tracks.flatMap((track) => {
-        return _.range(numberOfBeats).flatMap((beatIndex) => {
-          const isBeatEnabled = track.beatsToPlay.includes(beatIndex);
-          return (
-            <Box
-              key={track.sound.name + beatIndex}
-              sx={{
-                width: "100%",
-                height: 100,
-                background: isBeatEnabled ? "green" : "red",
-              }}
-              onClick={() => {
-                props.onBeatToggled(track, beatIndex);
-              }}
-            />
-          );
-        });
-      })}
-    </SimpleGrid>
   );
 };

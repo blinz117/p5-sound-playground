@@ -2,7 +2,7 @@ import _ from "lodash";
 import { Sketch, ReactP5Wrapper } from "react-p5-wrapper";
 import * as Tone from "tone";
 import { Sequence } from "tone";
-import { Tuple } from "./Tuple";
+import { Tuple } from ".././Tuple";
 
 interface DrumSound {
   name: string;
