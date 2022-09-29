@@ -92,6 +92,18 @@ export const DrumSequencerMantine = () => {
     newPart.start("0:0");
   }, [drumTracks]);
 
+  useEffect(() => {
+    Tone.Transport.loop = true;
+    Tone.Transport.loopStart = "0:0";
+    Tone.Transport.loopEnd = "0:8";
+    Tone.Transport.timeSignature = 8;
+
+    return () => {
+      Tone.Transport.stop();
+      Tone.Transport.cancel();
+    };
+  }, []);
+
   return (
     <Stack>
       <DrumPads
@@ -119,10 +131,6 @@ export const DrumSequencerMantine = () => {
             setIsPlaying(false);
           } else {
             Tone.start();
-            Tone.Transport.loop = true;
-            Tone.Transport.loopStart = "0:0";
-            Tone.Transport.loopEnd = "0:8";
-            Tone.Transport.timeSignature = 8;
             Tone.Transport.start();
             setIsPlaying(true);
           }
