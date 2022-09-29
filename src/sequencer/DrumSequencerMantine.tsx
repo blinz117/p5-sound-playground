@@ -2,7 +2,6 @@ import { ActionIcon, Button, Stack } from "@mantine/core";
 import _ from "lodash";
 import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
-import { Tuple } from "../Tuple";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { Time } from "tone/build/esm/core/type/Units";
 import { DrumPads } from "./DrumPads";
@@ -81,8 +80,6 @@ export const DrumSequencerMantine = () => {
     })
   );
 
-  //   const loop = useRef<Tone.Loop | null>(null);
-
   const part = useRef<Tone.Part | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -111,7 +108,6 @@ export const DrumSequencerMantine = () => {
               return stateTrack;
             }
           });
-          //   track.sound.play();
           setDrumTracks(newTracks);
         }}
       />
