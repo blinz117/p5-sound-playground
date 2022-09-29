@@ -84,6 +84,8 @@ export const DrumSequencerMantine = () => {
 
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [currentBeat, setCurrentBeat] = useState(0);
+
   useEffect(() => {
     part.current?.stop();
     part.current?.dispose();
@@ -98,6 +100,20 @@ export const DrumSequencerMantine = () => {
     Tone.Transport.loopEnd = "0:8";
     Tone.Transport.timeSignature = 8;
 
+    Tone.Transport.scheduleRepeat(
+      () => {
+        const currentBeatTime = Tone.Time(Tone.Transport.position).quantize(
+          "4n"
+        );
+        const beatNotation = Tone.Time(currentBeatTime).toBarsBeatsSixteenths();
+        const parsedTime = beatNotation.split(":");
+        const beatValue = parsedTime[1];
+        setCurrentBeat(parseInt(beatValue));
+      },
+      "4n",
+      "0:0"
+    );
+
     return () => {
       Tone.Transport.stop();
       Tone.Transport.cancel();
@@ -108,6 +124,7 @@ export const DrumSequencerMantine = () => {
     <Stack>
       <DrumPads
         tracks={drumTracks}
+        currentBeat={isPlaying ? currentBeat : null}
         onBeatToggled={(track, beatIndex) => {
           const newBeats = toggleBeat(track.beatsToPlay, beatIndex);
           const newTracks = drumTracks.map((stateTrack) => {
