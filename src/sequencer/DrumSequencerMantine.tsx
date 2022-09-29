@@ -17,7 +17,8 @@ const kickSynth = new Tone.MembraneSynth().toDestination();
 const snareSynth = new Tone.NoiseSynth({
   noise: { type: "white" },
 }).toDestination();
-const cymbalSynth = new Tone.MetalSynth().toDestination();
+const hiHatOpenSynth = new Tone.MetalSynth().toDestination();
+const hiHatClosedSynth = new Tone.MetalSynth().toDestination();
 
 const playKick = (time?: Time) => {
   kickSynth.triggerAttackRelease("C0", 0.3, time);
@@ -28,11 +29,11 @@ const playSnare = (time?: Time) => {
 };
 
 const playHiHatClosed = (time?: Time) => {
-  cymbalSynth.triggerAttackRelease("C6", 0.01, time);
+  hiHatClosedSynth.triggerAttackRelease("C6", 0.01, time);
 };
 
 const playHiHatOpen = (time?: Time) => {
-  cymbalSynth.triggerAttackRelease("C6", 0.5, time);
+  hiHatOpenSynth.triggerAttackRelease("C6", 0.5, time);
 };
 
 const instruments: DrumSound[] = [
