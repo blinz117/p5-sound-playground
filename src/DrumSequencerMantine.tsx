@@ -1,12 +1,16 @@
-import { Box, SimpleGrid } from "@mantine/core";
+import { ActionIcon, Box, Button, SimpleGrid, Stack } from "@mantine/core";
 import _ from "lodash";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 import { Tuple } from "./Tuple";
+import { FaPlay, FaStop } from "react-icons/fa";
+import { Time } from "tone/build/esm/core/type/Units";
+
+type DrumPlayFunction = (time?: Time) => void;
 
 interface DrumSound {
   name: string;
-  play: () => void;
+  play: DrumPlayFunction;
 }
 
 const kickSynth = new Tone.MembraneSynth().toDestination();
@@ -15,20 +19,20 @@ const snareSynth = new Tone.NoiseSynth({
 }).toDestination();
 const cymbalSynth = new Tone.MetalSynth().toDestination();
 
-const playKick = () => {
-  kickSynth.triggerAttackRelease("C0", 0.3);
+const playKick = (time?: Time) => {
+  kickSynth.triggerAttackRelease("C0", 0.3, time);
 };
 
-const playSnare = () => {
-  snareSynth.triggerAttackRelease(0.05);
+const playSnare = (time?: Time) => {
+  snareSynth.triggerAttackRelease(0.05, time);
 };
 
-const playHiHatClosed = () => {
-  cymbalSynth.triggerAttackRelease("C6", 0.01);
+const playHiHatClosed = (time?: Time) => {
+  cymbalSynth.triggerAttackRelease("C6", 0.01, time);
 };
 
-const playHiHatOpen = () => {
-  cymbalSynth.triggerAttackRelease("C6", 0.5);
+const playHiHatOpen = (time?: Time) => {
+  cymbalSynth.triggerAttackRelease("C6", 0.5, time);
 };
 
 const instruments: DrumSound[] = [
@@ -53,6 +57,19 @@ const toggleBeat = (beats: number[], beatIndex: number): number[] => {
   }
 };
 
+const getPartForTracks = (tracks: DrumTrack[]): Tone.Part => {
+  const notes = tracks.flatMap((track) => {
+    return track.beatsToPlay.flatMap((beatIndex) => {
+      const timeNotation = "0:" + beatIndex;
+      return { time: timeNotation, playFunction: track.sound.play };
+    });
+  });
+  console.log(notes);
+  return new Tone.Part((time, value) => {
+    value.playFunction(time);
+  }, notes);
+};
+
 export const DrumSequencerMantine = () => {
   const [drumTracks, setDrumTracks] = useState<DrumTrack[]>(
     instruments.map((instrument) => {
@@ -63,25 +80,59 @@ export const DrumSequencerMantine = () => {
     })
   );
 
+  //   const loop = useRef<Tone.Loop | null>(null);
+
+  const part = useRef<Tone.Part | null>(null);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    part.current?.stop();
+    const newPart = getPartForTracks(drumTracks);
+    part.current = newPart;
+    newPart.start();
+  }, [drumTracks]);
+
   return (
-    <DrumPads
-      tracks={drumTracks}
-      onBeatToggled={(track, beatIndex) => {
-        const newBeats = toggleBeat(track.beatsToPlay, beatIndex);
-        const newTracks = drumTracks.map((stateTrack) => {
-          if (stateTrack === track) {
-            return {
-              ...track,
-              beatsToPlay: newBeats,
-            };
+    <Stack>
+      <DrumPads
+        tracks={drumTracks}
+        onBeatToggled={(track, beatIndex) => {
+          const newBeats = toggleBeat(track.beatsToPlay, beatIndex);
+          const newTracks = drumTracks.map((stateTrack) => {
+            if (stateTrack === track) {
+              return {
+                ...track,
+                beatsToPlay: newBeats,
+              };
+            } else {
+              return stateTrack;
+            }
+          });
+          //   track.sound.play();
+          setDrumTracks(newTracks);
+        }}
+      />
+      <ActionIcon
+        variant="filled"
+        onClick={() => {
+          if (isPlaying) {
+            Tone.Transport.stop();
+            setIsPlaying(false);
           } else {
-            return stateTrack;
+            Tone.start();
+            Tone.Transport.loop = true;
+            Tone.Transport.loopStart = "0:0";
+            Tone.Transport.loopEnd = "0:8";
+            Tone.Transport.timeSignature = 8;
+            Tone.Transport.start();
+            setIsPlaying(true);
           }
-        });
-        track.sound.play();
-        setDrumTracks(newTracks);
-      }}
-    />
+        }}
+      >
+        {isPlaying ? <FaStop /> : <FaPlay />}
+      </ActionIcon>
+    </Stack>
   );
 };
 
