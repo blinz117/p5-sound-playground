@@ -1,4 +1,6 @@
 import { Box, SimpleGrid } from "@mantine/core";
+import _ from "lodash";
+import { useState } from "react";
 import * as Tone from "tone";
 import { Tuple } from "./Tuple";
 
@@ -36,25 +38,59 @@ const instruments: DrumSound[] = [
   { name: "hi hat (closed)", play: playHiHatClosed },
 ];
 
-// Is there a better way to do this?
-type BeatCount = 8;
-const numberOfBeats: BeatCount = 8;
-
-type DrumSequence = Tuple<boolean, BeatCount>;
+const numberOfBeats = 8;
 
 interface DrumTrack {
   sound: DrumSound;
-  sequence: DrumSequence;
+  beatsToPlay: number[];
 }
 
-const drumTracks = instruments.map((instrument) => {
-  return {
-    sound: instrument,
-    sequence: Array<boolean>(numberOfBeats).fill(false),
-  };
-});
+const toggleBeat = (beats: number[], beatIndex: number): number[] => {
+  if (beats.includes(beatIndex)) {
+    return _.without(beats, beatIndex);
+  } else {
+    return beats.concat(beatIndex);
+  }
+};
 
 export const DrumSequencerMantine = () => {
+  const [drumTracks, setDrumTracks] = useState<DrumTrack[]>(
+    instruments.map((instrument) => {
+      return {
+        sound: instrument,
+        beatsToPlay: [],
+      };
+    })
+  );
+
+  return (
+    <DrumPads
+      tracks={drumTracks}
+      onBeatToggled={(track, beatIndex) => {
+        const newBeats = toggleBeat(track.beatsToPlay, beatIndex);
+        const newTracks = drumTracks.map((stateTrack) => {
+          if (stateTrack === track) {
+            return {
+              ...track,
+              beatsToPlay: newBeats,
+            };
+          } else {
+            return stateTrack;
+          }
+        });
+        track.sound.play();
+        setDrumTracks(newTracks);
+      }}
+    />
+  );
+};
+
+interface DrumPadsProps {
+  tracks: DrumTrack[];
+  onBeatToggled: (track: DrumTrack, beatIndex: number) => void;
+}
+
+const DrumPads = (props: DrumPadsProps) => {
   return (
     <SimpleGrid
       cols={numberOfBeats}
@@ -64,8 +100,9 @@ export const DrumSequencerMantine = () => {
         height: "100%",
       }}
     >
-      {drumTracks.flatMap((track) => {
-        return track.sequence.flatMap((isBeatEnabled, beatIndex) => {
+      {props.tracks.flatMap((track) => {
+        return _.range(numberOfBeats).flatMap((beatIndex) => {
+          const isBeatEnabled = track.beatsToPlay.includes(beatIndex);
           return (
             <Box
               key={track.sound.name + beatIndex}
@@ -73,6 +110,9 @@ export const DrumSequencerMantine = () => {
                 width: "100%",
                 height: 100,
                 background: isBeatEnabled ? "green" : "red",
+              }}
+              onClick={() => {
+                props.onBeatToggled(track, beatIndex);
               }}
             />
           );
