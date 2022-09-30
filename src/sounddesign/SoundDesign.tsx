@@ -2,7 +2,6 @@
 /** @jsx jsx */
 import { Layer, Rect, Stage } from "react-konva";
 import { jsx, css } from "@emotion/react";
-import { useLayoutEffect, useRef, useState } from "react";
 import { useElementSize } from "@mantine/hooks";
 
 const fillSizeStyle = css({
