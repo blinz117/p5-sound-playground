@@ -77,6 +77,8 @@ export const SoundDesign = () => {
             stroke={"darkgray"}
             strokeWidth={4}
             lineCap={"round"}
+            listening={false}
+            perfectDrawEnabled={false}
           />
           <EditNode
             // Attack edit point
@@ -150,11 +152,13 @@ const EditNode = (props: EditNodeProps) => {
       y={props.y}
       radius={10}
       stroke={"lightblue"}
+      strokeWidth={4}
       fill={"white"}
       draggable
       onDragMove={(e) => {
         props.onDrag(e.target.x(), e.target.y(), e.target);
       }}
+      shadowForStrokeEnabled={false}
     />
   );
 };
