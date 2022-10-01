@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Group, Stack, Text } from "@mantine/core";
 import { EnvelopeEditor } from "./EnvelopeEditor";
 import { SimpleKeyboard } from "./SimpleKeyboard";
+import * as Tone from "tone";
+
+const oscillator = new Tone.OmniOscillator().toDestination();
 
 export const SoundDesign = () => {
   const [attack, setAttack] = useState(0.25);
@@ -27,7 +30,10 @@ export const SoundDesign = () => {
         <Text align="center">Sustain: {sustain.toFixed(2)}</Text>
         <Text align="center">Release: {release.toFixed(2)}</Text>
       </Group>
-      <SimpleKeyboard sx={{ width: "100%", height: 200 }} />
+      <SimpleKeyboard
+        sx={{ width: "100%", height: 200 }}
+        oscillator={oscillator}
+      />
     </Stack>
   );
 };
