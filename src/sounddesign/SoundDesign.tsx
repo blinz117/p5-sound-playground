@@ -7,6 +7,7 @@ import { useCallback, useRef, useState } from "react";
 import { Node } from "konva/lib/Node";
 import Konva from "konva";
 import _ from "lodash";
+import { Group, Stack, Text } from "@mantine/core";
 
 const fillSizeStyle = css({
   width: "100%",
@@ -17,6 +18,45 @@ const scaledWidth = 5;
 const scaledHeight = 1;
 
 export const SoundDesign = () => {
+  const [attack, setAttack] = useState(0.25);
+  const [decay, setDecay] = useState(0.5);
+  const [sustain, setSustain] = useState(0.5);
+  const [release, setRelease] = useState(0.5);
+
+  return (
+    <Stack css={fillSizeStyle}>
+      <EnvelopeEditor
+        attack={attack}
+        decay={decay}
+        sustain={sustain}
+        release={release}
+        setAttack={setAttack}
+        setDecay={setDecay}
+        setSustain={setSustain}
+        setRelease={setRelease}
+      />
+      <Group grow>
+        <Text align="center">Attack: {attack.toFixed(2)}</Text>
+        <Text align="center">Decay: {decay.toFixed(2)}</Text>
+        <Text align="center">Sustain: {sustain.toFixed(2)}</Text>
+        <Text align="center">Release: {release.toFixed(2)}</Text>
+      </Group>
+    </Stack>
+  );
+};
+
+interface EnvelopeEditorProps {
+  attack: number;
+  decay: number;
+  sustain: number;
+  release: number;
+  setAttack: (attack: number) => void;
+  setDecay: (decay: number) => void;
+  setSustain: (sustain: number) => void;
+  setRelease: (release: number) => void;
+}
+
+const EnvelopeEditor = (props: EnvelopeEditorProps) => {
   const { ref, width, height } = useElementSize();
 
   const getAbsoluteXForScaledX = useCallback(
@@ -47,17 +87,23 @@ export const SoundDesign = () => {
     [height]
   );
 
-  const [attack, setAttack] = useState(0.25);
-  const [decay, setDecay] = useState(0.5);
-  const [sustain, setSustain] = useState(0.5);
-  const [release, setRelease] = useState(0.5);
+  const {
+    attack,
+    decay,
+    sustain,
+    release,
+    setAttack,
+    setDecay,
+    setSustain,
+    setRelease,
+  } = props;
 
   return (
     <div css={fillSizeStyle} ref={ref}>
       <Stage width={width} height={height}>
         <Layer
           // Offset and scale to give canvas some padding
-          scale={{ x: 0.75, y: 0.75 }}
+          scale={{ x: 0.9, y: 0.9 }}
           offset={{ x: width / 2, y: height / 2 }}
           position={{ x: width / 2, y: height / 2 }}
         >
