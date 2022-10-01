@@ -14,17 +14,17 @@ const fillSizeStyle = css({
   height: "100%",
 });
 
-const scaledWidth = 5;
+const scaledWidth = 6;
 const scaledHeight = 1;
 
 export const SoundDesign = () => {
   const [attack, setAttack] = useState(0.25);
-  const [decay, setDecay] = useState(0.5);
-  const [sustain, setSustain] = useState(0.5);
+  const [decay, setDecay] = useState(0.3);
+  const [sustain, setSustain] = useState(0.6);
   const [release, setRelease] = useState(0.5);
 
   return (
-    <Stack css={fillSizeStyle}>
+    <Stack css={fillSizeStyle} spacing={0}>
       <EnvelopeEditor
         attack={attack}
         decay={decay}
@@ -103,7 +103,7 @@ const EnvelopeEditor = (props: EnvelopeEditorProps) => {
       <Stage width={width} height={height}>
         <Layer
           // Offset and scale to give canvas some padding
-          scale={{ x: 0.9, y: 0.9 }}
+          scale={{ x: 0.95, y: 0.95 }}
           offset={{ x: width / 2, y: height / 2 }}
           position={{ x: width / 2, y: height / 2 }}
         >
