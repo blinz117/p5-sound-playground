@@ -1,11 +1,9 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Circle, Group, Layer, Line, Rect, Stage } from "react-konva";
+import { Circle, Layer, Line, Stage } from "react-konva";
 import { jsx, css } from "@emotion/react";
 import { useElementSize } from "@mantine/hooks";
 import { useCallback, useRef, useState } from "react";
-import { xor } from "lodash";
-import { Vector2d } from "konva/lib/types";
 import { Node } from "konva/lib/Node";
 import Konva from "konva";
 import _ from "lodash";
@@ -49,7 +47,7 @@ export const SoundDesign = () => {
     [height]
   );
 
-  const [attack, setAttack] = useState(0.5);
+  const [attack, setAttack] = useState(0.25);
   const [decay, setDecay] = useState(0.5);
   const [sustain, setSustain] = useState(0.5);
   const [release, setRelease] = useState(0.5);
@@ -81,6 +79,7 @@ export const SoundDesign = () => {
             lineCap={"round"}
           />
           <EditNode
+            // Attack edit point
             x={getAbsoluteXForScaledX(attack)}
             y={0}
             onDrag={(x, y, node) => {
@@ -94,6 +93,7 @@ export const SoundDesign = () => {
             }}
           />
           <EditNode
+            // Decay edit point
             x={getAbsoluteXForScaledX(attack + decay)}
             y={getAbsoluteYForScaledY(sustain)}
             onDrag={(x, y, node) => {
@@ -111,6 +111,7 @@ export const SoundDesign = () => {
             }}
           />
           <EditNode
+            // Release edit point
             x={getAbsoluteXForScaledX(scaledWidth - release)}
             y={getAbsoluteYForScaledY(sustain)}
             onDrag={(x, y, node) => {
