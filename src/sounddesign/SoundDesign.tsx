@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Group, Stack, Text } from "@mantine/core";
 import { EnvelopeEditor } from "./EnvelopeEditor";
 import { SimpleKeyboard } from "./SimpleKeyboard";
@@ -16,6 +16,15 @@ export const SoundDesign = () => {
   const [decay, setDecay] = useState(toSeconds(envelope.decay));
   const [sustain, setSustain] = useState(envelope.sustain);
   const [release, setRelease] = useState(toSeconds(envelope.release));
+
+  useEffect(() => {
+    envelope.set({
+      attack: attack,
+      decay: decay,
+      sustain: sustain,
+      release: release,
+    });
+  }, [attack, decay, sustain, release]);
 
   return (
     <Stack sx={{ height: "100%" }} spacing={0}>
