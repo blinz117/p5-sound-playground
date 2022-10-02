@@ -9,21 +9,15 @@ const minNote = 60;
 const maxNote = 72;
 const noteRangeSize = maxNote - minNote;
 
-type AnyOscillator =
-  | Tone.Oscillator
-  | Tone.PWMOscillator
-  | Tone.PulseOscillator
-  | Tone.FatOscillator
-  | Tone.AMOscillator
-  | Tone.FMOscillator;
-
 const noteToFrequency = (note: number) => {
   return Tone.Frequency(note, "midi").toFrequency();
 };
 
 interface SimpleKeyboardProps {
   sx?: Sx;
-  oscillator?: Tone.OmniOscillator<AnyOscillator> | AnyOscillator;
+  onFrequencyUpdated: (frequency: number) => void;
+  onPlayStarted: (frequency: number) => void;
+  onPlayEnded: () => void;
 }
 
 export const SimpleKeyboard = (props: SimpleKeyboardProps) => {
@@ -37,20 +31,16 @@ export const SimpleKeyboard = (props: SimpleKeyboardProps) => {
     <Box sx={props.sx} ref={ref}>
       <Stage width={width} height={height}>
         <Layer
-          onMouseDown={async (e) => {
-            await Tone.start();
+          onMouseDown={(e) => {
             const note = _.floor((e.evt.x / width) * noteRangeSize) + minNote;
-            if (props.oscillator) {
-              props.oscillator.frequency.value = noteToFrequency(note);
-              props.oscillator.start();
-            }
+            props.onPlayStarted(noteToFrequency(note));
           }}
           onMouseMove={(e) => {
             const note = _.floor((e.evt.x / width) * noteRangeSize) + minNote;
-            props.oscillator?.frequency?.rampTo(noteToFrequency(note), 0.05);
+            props.onFrequencyUpdated(noteToFrequency(note));
           }}
           onMouseUp={() => {
-            props.oscillator?.stop();
+            props.onPlayEnded();
           }}
         >
           {_.range(minNote, maxNote + 1).flatMap((note, index) => {

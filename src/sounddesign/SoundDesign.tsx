@@ -4,13 +4,18 @@ import { EnvelopeEditor } from "./EnvelopeEditor";
 import { SimpleKeyboard } from "./SimpleKeyboard";
 import * as Tone from "tone";
 
-const oscillator = new Tone.OmniOscillator().toDestination();
+const envelope = new Tone.AmplitudeEnvelope().toDestination();
+const oscillator = new Tone.OmniOscillator().connect(envelope).start();
+
+const toSeconds = (time: Tone.Unit.Time): number => {
+  return Tone.Time(time).toSeconds();
+};
 
 export const SoundDesign = () => {
-  const [attack, setAttack] = useState(0.25);
-  const [decay, setDecay] = useState(0.3);
-  const [sustain, setSustain] = useState(0.6);
-  const [release, setRelease] = useState(0.5);
+  const [attack, setAttack] = useState(toSeconds(envelope.attack));
+  const [decay, setDecay] = useState(toSeconds(envelope.decay));
+  const [sustain, setSustain] = useState(envelope.sustain);
+  const [release, setRelease] = useState(toSeconds(envelope.release));
 
   return (
     <Stack sx={{ height: "100%" }} spacing={0}>
@@ -32,7 +37,15 @@ export const SoundDesign = () => {
       </Group>
       <SimpleKeyboard
         sx={{ width: "100%", height: 200 }}
-        oscillator={oscillator}
+        onFrequencyUpdated={(frequency) =>
+          oscillator.frequency.rampTo(frequency, 0.05)
+        }
+        onPlayStarted={async (frequency) => {
+          await Tone.start();
+          oscillator.frequency.value = frequency;
+          envelope.triggerAttack();
+        }}
+        onPlayEnded={() => envelope.triggerRelease()}
       />
     </Stack>
   );
