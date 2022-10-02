@@ -172,6 +172,18 @@ const EditNode = (props: EditNodeProps) => {
       onDragMove={(e) => {
         props.onDrag(e.target.x(), e.target.y(), e.target);
       }}
+      onMouseEnter={(e) => {
+        const stage = e.target.getStage();
+        if (stage !== null) {
+          stage.container().style.cursor = "move";
+        }
+      }}
+      onMouseLeave={(e) => {
+        const stage = e.target.getStage();
+        if (stage !== null) {
+          stage.container().style.cursor = "default";
+        }
+      }}
       shadowForStrokeEnabled={false}
     />
   );
