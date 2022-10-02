@@ -5,5 +5,9 @@ import { DrumSequencerP5 } from "./sequencer/DrumSequencerP5";
 import { SlideKeyboard } from "./SlideKeyboard";
 
 export default function App() {
-  return <DemoChooser />;
+  return (
+    <div className="App">
+      <DemoChooser />
+    </div>
+  );
 }
