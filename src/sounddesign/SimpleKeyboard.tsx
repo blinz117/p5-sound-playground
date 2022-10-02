@@ -7,7 +7,7 @@ import * as Tone from "tone";
 
 const minNote = 60;
 const maxNote = 72;
-const noteRangeSize = maxNote - minNote;
+const noteRangeSize = maxNote - minNote + 1;
 
 const noteToFrequency = (note: number) => {
   return Tone.Frequency(note, "midi").toFrequency();
