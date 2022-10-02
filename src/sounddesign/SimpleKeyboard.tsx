@@ -36,6 +36,7 @@ export const SimpleKeyboard = (props: SimpleKeyboardProps) => {
             props.onPlayStarted(noteToFrequency(note));
           }}
           onMouseMove={(e) => {
+            if (!e.evt.buttons) return;
             const note = _.floor((e.evt.x / width) * noteRangeSize) + minNote;
             props.onFrequencyUpdated(noteToFrequency(note));
           }}
