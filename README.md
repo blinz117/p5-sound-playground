@@ -40,6 +40,26 @@ To adjust the type of the wave, use the "Wave Type" dropdown to choose different
 
 To hear the sound, use the keyboard area at the bottom of the screen to play notes. The controls for the keyboard are similar to that of the "Slide Keyboard" demo.
 
-## Details of the professional development work
+## Details of the professional development process
+
+## Goals
 
 The primary focus of my professional development time was to learn about Typescript. I tend to learn things well by applying them in practice - i.e. by building things that I am interested in and learning along the way via documentation, experimentations, etc.
+
+I also wanted to learn about the p5 library since it seems to be focused around building interactive demos and art.
+
+I also wanted to continue using React in general to continue to maintain that skill.
+
+### Changes to goals along the way
+
+I initially wanted to learn about the p5.sound library to produce audio. However, I ran into a lot of issues getting it to play nicely with other tooling. I decided to pivot to using Tone.js instead though, which integrated much more nicely, and is also what p5.sound uses behind-the-scenes anyway.
+
+For the "Sound Designer" demo, I also wanted to add some interactivity with drag-and-drop controls on my canvas sketch. I didn't see a clean, simple way to do this with p5, so I decided to pivot to using the Konva library, which has built-in drag-and-drop support, as well as working with React more natively.
+
+## Non-goals
+
+I didn't really want to focus on UI design, except where it helped accomplish the main goals. Thus, I didn't spend a lot of effort to make the UI attractive or even user-friendly.
+
+I also wasn't aim for clean overall architecture, except in cases where it might affect the main goal. Code is not necessarily how I would organize it for long-term usage or support.
+
+I also was not aiming to be bug-free, at least in terms of application logic. I did want to see areas where Typescript could help avoid certain kinds of bugs (for example, accidentally misspellings or type mis-matches), but I wasn't as concerned if there was an issue with, say, timing issues in the drum sequencer.
