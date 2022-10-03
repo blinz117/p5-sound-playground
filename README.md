@@ -42,7 +42,7 @@ To hear the sound, use the keyboard area at the bottom of the screen to play not
 
 ## Details of the professional development process
 
-## Goals
+### Goals
 
 The primary focus of my professional development time was to learn about Typescript. I tend to learn things well by applying them in practice - i.e. by building things that I am interested in and learning along the way via documentation, experimentations, etc.
 
@@ -50,13 +50,13 @@ I also wanted to learn about the p5 library since it seems to be focused around 
 
 I also wanted to continue using React in general to continue to maintain that skill.
 
-### Changes to goals along the way
+#### Changes to goals along the way
 
 I initially wanted to learn about the p5.sound library to produce audio. However, I ran into a lot of issues getting it to play nicely with other tooling. I decided to pivot to using Tone.js instead though, which integrated much more nicely, and is also what p5.sound uses behind-the-scenes anyway.
 
 For the "Sound Designer" demo, I also wanted to add some interactivity with drag-and-drop controls on my canvas sketch. I didn't see a clean, simple way to do this with p5, so I decided to pivot to using the Konva library, which has built-in drag-and-drop support, as well as working with React more natively.
 
-## Non-goals
+### Non-goals
 
 I didn't really want to focus on UI design, except where it helped accomplish the main goals. Thus, I didn't spend a lot of effort to make the UI attractive or even user-friendly.
 
